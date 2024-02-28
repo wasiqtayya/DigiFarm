@@ -23,40 +23,14 @@ if (!isset($_SESSION['email'])) {
     <!--- main sec Start--->
     <section class="container-fluid h-100 g-0">
         <div class="main position-relative d-flex justify-content-between">
-            <div class="header-top d-flex align-items-center justify-content-between bg-body w-100 position-fixed">
-                <?php require('assets/element/topBar.html')?>
-                <div id="profile-dropdown" class="d-flex align-items-center h-100">
-                    <div class="user-profile-icon">
-                        <img src="assets/img/author-nav.png" />
-                    </div>
-                    <?php
-                       $email = $_SESSION['email'];
-$log_in = "SELECT name FROM user WHERE email='$email'";
-$log_in_rs = mysqli_query($conn, $log_in);
-
-if($log_in_rs) {
-    $row = mysqli_fetch_assoc($log_in_rs);
-    $name = $row['name'];
-    ?>
-                           <span><?php echo $name; ?></span>
-                           <?php
-} else {
-    echo "Error: " . mysqli_error($conn);
-}
-?>
-                </div>
-            </div>
-            <div id="drop-down-toggler">
-                <span class="material-symbols-outlined">more_vert</span>
-            </div>
-        </div>
+        <?php require('assets/element/topBar.php')?>
 
 
         <div class="sidebar position-relative">
             <div class="side-bar-content-wrapper d-flex flex-column h-100">
                 <div class="links-content d-flex flex-column justify-content-between h-100">
                     <div class="sidebar-links-wrapper">
-                        <a href="dashboard.html" class="side-bar-item active-link d-flex align-items-center">
+                        <a href="dashboard.php" class="side-bar-item active-link d-flex align-items-center">
                             <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                 viewBox="0 0 24 24">
                                 <path fill="currentColor"

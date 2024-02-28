@@ -4,6 +4,7 @@ $(document).ready(function() {
 
     var email = $.trim($('input[name="email"]').val());
     var password = $.trim($('input[name="password"]').val());
+    
     if (email === '') {
       showError("Email field is required!");
     } else if (!isValidEmail(email)) {

@@ -2710,3 +2710,7 @@ input[type="checkbox"] {
 .gm-style iframe+div {
     border: none !important;
 }
+
+.custom-margin {
+    margin-left: 10rem; /* Adjust this value to match the desired spacing */
+}

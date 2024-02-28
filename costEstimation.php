@@ -19,21 +19,8 @@ if (!isset($_SESSION['email'])) {
 <!--- main sec Start--->
 <section class="container-fluid h-100 g-0">
     <div class="main position-relative d-flex justify-content-between">
-        <div class="header-top d-flex align-items-center justify-content-between bg-body w-100 position-fixed">
-                <?php require('assets/element/topBar.html')?>
-                <div id="profile-dropdown" class="d-flex align-items-center h-100">
-                    <div class="user-profile-icon">
-                        <img src="assets/img/author-nav.png">
-                    </div>
-                    <span>
-                     Danial
-                </span>
-                </div>
-            </div>
-            <div id="drop-down-toggler">
-                <span class="material-symbols-outlined">more_vert</span>
-            </div>
-        </div>
+        <?php require('assets/element/topBar.php')?>
+
         <div class="sidebar position-relative">
             <div class="side-bar-content-wrapper d-flex flex-column h-100">
                 <div class="links-content d-flex flex-column justify-content-between h-100">
