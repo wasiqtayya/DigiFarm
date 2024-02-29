@@ -1,10 +1,58 @@
 $(document).ready(function() {
+  $('#addFarmForm').submit(function(event) {
+    event.preventDefault();
+    
+    var farmName = $.trim($('input[name="farmName"]').val());
+    var villageName = $.trim($('input[name="villageName"]').val());
+    var landArea = $.trim($('input[name="landArea"]').val());
+    var coordinates = $.trim($('input[name="coordinates"]').val());
+    var possessionType = $('select[name="possessionType"]').val();
+    var opportunityCost = $.trim($('input[name="opportunityCost"]').val());
+    var rentalCost = $.trim($('input[name="rentalCost"]').val());
+
+    if (possessionType == '0') {
+      showError("Select the possession cost!");
+      return;
+    }
+    
+    if (possessionType == '1') {
+        if (opportunityCost == '') {
+            showError("Enter opportunity cost!");
+            return;
+        }
+    }
+
+    if (possessionType == '2') {
+        if (rentalCost == '') {
+            showError("Enter rental cost!");
+            return;
+        }
+    }
+      var formData = $(this).serialize();
+      $.ajax({
+        type: 'POST',
+        url: 'process.php?action=addfarm',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+          if (response.success) {
+            handleSuccess(response, 'addFarm.php');
+          } else {
+            showError(response.message)
+          }
+        },
+        error: handleError
+      });
+  });
+});
+
+$(document).ready(function() {
   $('#signinForm').submit(function(event) {
     event.preventDefault();
 
     var email = $.trim($('input[name="email"]').val());
     var password = $.trim($('input[name="password"]').val());
-    
+
     if (email === '') {
       showError("Email field is required!");
     } else if (!isValidEmail(email)) {
@@ -186,9 +234,9 @@ jQuery("#possesionValue").change(function () {
     selectedValue = parseInt(selectedValue);
 
     // Show the corresponding div based on the selected value
-    if (selectedValue === 2) {
+    if (selectedValue === 1) {
         jQuery("#opportunityValue").removeClass("d-none");
-    } else if (selectedValue === 3) {
+    } else if (selectedValue === 2) {
         jQuery("#rentalValue").removeClass("d-none");
     }
 });
@@ -520,4 +568,19 @@ function handleSuccess(response, redirectUrl) {
 
 function handleError(xhr, status, error) {
   console.error(error);
+}
+function getCoordinates() {
+  console.log("Button clicked");
+  if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+
+          document.getElementById("coordinatesInput").value = latitude + ", " + longitude;
+      }, function(error) {
+        showError("An error occurred while fetching the location.")
+      });
+  } else {
+      showError("Geolocation is not supported by this browser.")
+  }
 }

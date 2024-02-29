@@ -13,6 +13,7 @@ if (!isset($_SESSION['email'])) {
 <head>
     <title>Farm • DigiFarm</title>
     <?php require('assets/element/meta.html')?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="dashbord-page position-relative">
@@ -103,67 +104,50 @@ if (!isset($_SESSION['email'])) {
                                 </div>
                             </div>
                             <div class="row-add-table">
-                                <div class="table-container">
-                                    <div
-                                        class="crop-table-row title-row d-flex justify-content-between align-items-center">
-                                        <div class="start-table-col table-col">
-                                            Id
-                                        </div>
-                                        <div class="content-table-col table-col">
-                                            Farm name
-                                        </div>
-                                        <div class="content-table-col table-col">
-                                            Village Name
-                                        </div>
-                                        <div class="content-table-col table-col">
-                                            Land Area (Acre)
-                                        </div>
-                                        <div class="content-table-col table-col">
-                                            Possession Per Acre
-                                        </div>
-                                        <div class="content-table-col table-col">
-                                            Created at
-                                        </div>
-                                        <div class="action-row table-col">
-                                            Action
-                                        </div>
-                                    </div>
-                                    <!-- Repeated rows start here -->
-                                    <?php
-                            $farm_data = [
-                                ["Robert Clinton", "Malik Pur", "200", "Own", "August 20, 2020"],
-                                ["Grey Tea", "Sheikh Wala", "200", "Rental", "August 20, 2020"],
-                                ["Michael Johnson", "Sheikh Wala", "200", "Rental", "August 20, 2020"],
-                                ["Robert Clinton", "Malik Pur", "200", "Rental", "August 20, 2020"],
-                                ["Grey Tea", "Malik Pur", "200", "Own", "August 20, 2020"],
-                                ["Michael Johnson", "365 GB", "200", "Own", "August 20, 2020"]
-                            ];
+    <div class="table-container">
+        <div class="crop-table-row title-row d-flex justify-content-between align-items-center">
+            <div class="start-table-col table-col">Id</div>
+            <div class="content-table-col table-col">Farm name</div>
+            <div class="content-table-col table-col">Village Name</div>
+            <div class="content-table-col table-col">Land Area (Acre)</div>
+            <div class="content-table-col table-col">Possession Per Acre</div>
+            <div class="content-table-col table-col">Created at</div>
+            <div class="action-row table-col">Action</div>
+        </div>
+        <!-- Repeated rows start here -->
+        <?php
+        // Assuming $conn is the database connection
+        $query = "SELECT id, farm_name, village_no, farm_area, possession_type_id, created_at FROM farm";
+        $result = mysqli_query($conn, $query);
 
-foreach ($farm_data as $index => $farm) {
-    echo '<div class="crop-table-row body-row d-flex justify-content-between align-items-center">
-                                        <div class="start-table-col number-wrapper table-col">' . ($index + 1) . '</div>
-                                        <div class="content-table-col table-col">' . $farm[0] . '</div>
-                                        <div class="content-table-col table-col">' . $farm[1] . '</div>
-                                        <div class="content-table-col table-col">' . $farm[2] . '</div>
-                                        <div class="content-table-col table-col">' . $farm[3] . '</div>
-                                        <div class="content-table-col table-col">' . $farm[4] . '</div>
-                                        <div class="action-row table-col d-flex justify-content-end align-items-center">
-                                            <div class="tabe-edit-col iconcol" data-bs-toggle="modal"
-                                                data-bs-target="#addLandItem">
-                                                <span class="material-symbols-outlined">edit_note</span>
-                                            </div>
-                                            <div class="tabe-delete-col iconcol" data-bs-toggle="modal"
-                                                data-bs-target="#eaddDletePopup">
-                                                <span class="material-symbols-outlined">delete</span>
-                                            </div>
-                                        </div>
-                                    </div>';
-}
-?>
-                                    <!-- Repeated rows end here -->
-                                </div>
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $possession_type = ($row['possession_type_id'] == 1) ? 'Own' : 'Rental';
+                $created_at = date('F d, Y', strtotime($row['created_at']));
+                echo '<div class="crop-table-row body-row d-flex justify-content-between align-items-center">
+                        <div class="start-table-col number-wrapper table-col">' . $row['id'] . '</div>
+                        <div class="content-table-col table-col">' . $row['farm_name'] . '</div>
+                        <div class="content-table-col table-col">' . $row['village_no'] . '</div>
+                        <div class="content-table-col table-col">' . $row['farm_area'] . '</div>
+                        <div class="content-table-col table-col">' . $possession_type . '</div>
+                        <div class="content-table-col table-col">' . $created_at . '</div>
+                        <div class="action-row table-col d-flex justify-content-end align-items-center">
+                            <div class="tabe-edit-col iconcol" data-bs-toggle="modal" data-bs-target="#addLandItem">
+                                <span class="material-symbols-outlined">edit_note</span>
+                            </div>
+                            <div class="tabe-delete-col iconcol" data-bs-toggle="modal" data-bs-target="#eaddDletePopup">
+                                <span class="material-symbols-outlined">delete</span>
                             </div>
                         </div>
+                    </div>';
+            }
+        } else {
+            echo '<div class="crop-table-row body-row d-flex justify-content-center align-items-center">No data available</div>';
+        }
+        ?>
+        <!-- Repeated rows end here -->
+    </div>
+</div>
 
                         <div class="modal fade alertPopup " id="eaddDletePopup" tabindex="-1"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -202,7 +186,8 @@ foreach ($farm_data as $index => $farm) {
     <!--- Footer  end --->
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?token=<?php echo time(); ?>"></script>
+
 </body>
 
 </html>

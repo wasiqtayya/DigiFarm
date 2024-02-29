@@ -2,9 +2,8 @@
 require_once("config.php");
 
 if (!isset($_SESSION['email'])) {
-    // Redirect the user to the login page
     header("Location: index.php");
-    exit(); // Stop executing further code
+    exit();
 }
 
 ?>
