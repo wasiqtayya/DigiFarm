@@ -142,7 +142,8 @@ if (!isset($_SESSION['email'])) {
                     </div>';
             }
         } else {
-            echo '<div class="crop-table-row body-row d-flex justify-content-center align-items-center">No data available</div>';
+            echo '<div class="crop-table-row body-row d-flex justify-content-center align-items-center" style="height: 200px;">No data available</div>
+            ';
         }
         ?>
         <!-- Repeated rows end here -->

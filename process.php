@@ -58,7 +58,6 @@ function signup()
 function signin()
 {
     require_once("config.php");
-
     try {
         $email = $_POST["email"];
         $password = $_POST["password"];
@@ -72,7 +71,7 @@ function signin()
             $row = mysqli_fetch_assoc($log_in_rs);
             $hashed_password = $row['password'];
 
-            if($password = $hashed_password) {
+            if($password == $hashed_password) {
                 $_SESSION['email'] = $email;
                 return array('success' => true, 'message' => 'User is logged in successfully!');
             } else {
