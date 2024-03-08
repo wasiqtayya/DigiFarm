@@ -3,20 +3,12 @@ require_once("config.php");
 
 if (!isset($_SESSION['email'])) {
     header("Location: index.php");
-    exit();
+    exit("error");
 }
-
+include("header.php");
 ?>
 
 
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <title>Dashboard • DigiFarm</title>
-    <?php require('assets/element/meta.html')?>
-</head>
 
 <body class="dashbord-page position-relative">
     <!--- main sec Start--->

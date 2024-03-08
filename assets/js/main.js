@@ -1,4 +1,23 @@
 $(document).ready(function() {
+  $('#signinForm').submit(function(event) {
+    event.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: 'process.php?action=signin',
+        data: $(this).serialize(),
+        success: function(response) {
+          if (response.success) {
+            window.location.href = 'dashboard.php';
+          } else {
+            showError(response.message)
+          }
+        },
+        error: handleError
+      });
+  });
+});
+
+$(document).ready(function() {
   $('#addFarmForm').submit(function(event) {
     event.preventDefault();
     
@@ -46,36 +65,7 @@ $(document).ready(function() {
   });
 });
 
-$(document).ready(function() {
-  $('#signinForm').submit(function(event) {
-    event.preventDefault();
 
-    var email = $.trim($('input[name="email"]').val());
-    var password = $.trim($('input[name="password"]').val());
-
-    if (email === '') {
-      showError("Email field is required!");
-    } else if (!isValidEmail(email)) {
-      showError("Invalid email format!");
-    } else {
-      var formData = $(this).serialize();
-      $.ajax({
-        type: 'POST',
-        url: 'process.php?action=signin',
-        data: formData,
-        dataType: 'json',
-        success: function(response) {
-          if (response.success) {
-            window.location.href = 'dashboard.php';
-          } else {
-            showError(response.message)
-          }
-        },
-        error: handleError
-      });
-    }
-  });
-});
 
 $(document).ready(function() {
   $('#signupForm').submit(function(event) {
@@ -569,6 +559,7 @@ function handleSuccess(response, redirectUrl) {
 function handleError(xhr, status, error) {
   console.error(error);
 }
+
 function getCoordinates() {
   console.log("Button clicked");
   if ("geolocation" in navigator) {

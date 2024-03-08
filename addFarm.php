@@ -3,7 +3,7 @@ require_once("config.php");
 
 if (!isset($_SESSION['email'])) {
     header("Location: index.php");
-    exit(); 
+    exit();
 }
 ?>
 
@@ -17,11 +17,9 @@ if (!isset($_SESSION['email'])) {
 </head>
 
 <body class="dashbord-page position-relative">
-    <!--- main sec Start--->
     <section class="container-fluid h-100 g-0">
         <div class="main position-relative d-flex justify-content-between">
-        <?php require('assets/element/topBar.php')?>
-            <!-- dashboard content -->
+            <?php require('assets/element/topBar.php')?>
             <div class="sidebar position-relative">
                 <div class="side-bar-content-wrapper d-flex flex-column h-100">
                     <div class="links-content d-flex flex-column justify-content-between h-100">
@@ -104,91 +102,80 @@ if (!isset($_SESSION['email'])) {
                                 </div>
                             </div>
                             <div class="row-add-table">
-    <div class="table-container">
-        <div class="crop-table-row title-row d-flex justify-content-between align-items-center">
-            <div class="start-table-col table-col">Id</div>
-            <div class="content-table-col table-col">Farm name</div>
-            <div class="content-table-col table-col">Village Name</div>
-            <div class="content-table-col table-col">Land Area (Acre)</div>
-            <div class="content-table-col table-col">Possession Per Acre</div>
-            <div class="content-table-col table-col">Created at</div>
-            <div class="action-row table-col">Action</div>
-        </div>
-        <!-- Repeated rows start here -->
-        <?php
-        // Assuming $conn is the database connection
-        $query = "SELECT id, farm_name, village_no, farm_area, possession_type_id, created_at FROM farm";
-        $result = mysqli_query($conn, $query);
-
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $possession_type = ($row['possession_type_id'] == 1) ? 'Own' : 'Rental';
-                $created_at = date('F d, Y', strtotime($row['created_at']));
-                echo '<div class="crop-table-row body-row d-flex justify-content-between align-items-center">
-                        <div class="start-table-col number-wrapper table-col">' . $row['id'] . '</div>
-                        <div class="content-table-col table-col">' . $row['farm_name'] . '</div>
-                        <div class="content-table-col table-col">' . $row['village_no'] . '</div>
-                        <div class="content-table-col table-col">' . $row['farm_area'] . '</div>
-                        <div class="content-table-col table-col">' . $possession_type . '</div>
-                        <div class="content-table-col table-col">' . $created_at . '</div>
-                        <div class="action-row table-col d-flex justify-content-end align-items-center">
-                            <div class="tabe-edit-col iconcol" data-bs-toggle="modal" data-bs-target="#addLandItem">
-                                <span class="material-symbols-outlined">edit_note</span>
-                            </div>
-                            <div class="tabe-delete-col iconcol" data-bs-toggle="modal" data-bs-target="#eaddDletePopup">
-                                <span class="material-symbols-outlined">delete</span>
-                            </div>
-                        </div>
-                    </div>';
-            }
-        } else {
-            echo '<div class="crop-table-row body-row d-flex justify-content-center align-items-center" style="height: 200px;">No data available</div>
-            ';
-        }
-        ?>
-        <!-- Repeated rows end here -->
-    </div>
-</div>
-
-                        <div class="modal fade alertPopup " id="eaddDletePopup" tabindex="-1"
-                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog w-100">
-                                <div class="modal-content">
-                                    <!------modal body----------->
-                                    <div class="modal-body">
-                                        <div class="d-flex align-items-center ">
-                                            <span class="material-symbols-outlined">error</span>
-                                            <h3 class="ms-4"> Do you want to delete this record? </h3>
-                                        </div>
+                                <div class="table-container">
+                                    <div class="crop-table-row title-row d-flex justify-content-between align-items-center">
+                                        <div class="start-table-col table-col">Id</div>
+                                        <div class="content-table-col table-col">Farm name</div>
+                                        <div class="content-table-col table-col">Village Name</div>
+                                        <div class="content-table-col table-col">Land Area (Acre)</div>
+                                        <div class="content-table-col table-col">Possession Per Acre</div>
+                                        <div class="content-table-col table-col">Created at</div>
+                                        <div class="action-row table-col">Action</div>
                                     </div>
-                                    <div class="modal-footer delete-buttn-wrapper justify-content-end">
-                                        <button type="submit" class="btn btn-primary mb-3 cancel-button"
-                                            data-bs-dismiss="modal" aria-label="Close">Cancel
-                                        </button>
-                                        <button type="button" class="btn btn-primary mb-3" data-bs-dismiss="modal"
-                                            aria-label="Close">
-                                            OK
-                                        </button>
+                                    <?php
+                                    $query = "SELECT id, farm_name, village_no, farm_area, possession_type_id, created_at FROM farm";
+                                    $result = mysqli_query($conn, $query);
+
+                                    if (mysqli_num_rows($result) > 0) {
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            $possession_type = ($row['possession_type_id'] == 1) ? 'Own' : 'Rental';
+                                            $created_at = date('F d, Y', strtotime($row['created_at']));
+                                            echo '<div class="crop-table-row body-row d-flex justify-content-between align-items-center">
+                                                <div class="start-table-col number-wrapper table-col">' . $row['id'] . '</div>
+                                                <div class="content-table-col table-col">' . $row['farm_name'] . '</div>
+                                                <div class="content-table-col table-col">' . $row['village_no'] . '</div>
+                                                <div class="content-table-col table-col">' . $row['farm_area'] . '</div>
+                                                <div class="content-table-col table-col">' . $possession_type . '</div>
+                                                <div class="content-table-col table-col">' . $created_at . '</div>
+                                                <div class="action-row table-col d-flex justify-content-end align-items-center">
+                                                    <div class="tabe-edit-col iconcol editForm" data-id="' . $row['id'] . '">
+                                                        <span class="material-symbols-outlined">edit_note</span>
+                                                    </div>
+                                                    <div class="tabe-delete-col iconcol" data-bs-toggle="modal" data-bs-target="#eaddDletePopup" data-farm-id="' . $row['id'] . '">
+                                                        <span class="material-symbols-outlined">delete</span>
+                                                    </div>
+                                                </div>
+                                            </div>';
+                                        }
+                                    } else {
+                                        echo '<div class="crop-table-row body-row d-flex justify-content-center align-items-center" style="height: 200px;">No data available</div>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="modal fade alertPopup " id="eaddDletePopup" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog w-100">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="d-flex align-items-center ">
+                                                <span class="material-symbols-outlined">error</span>
+                                                <h3 class="ms-4"> Do you want to delete this record? </h3>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer delete-buttn-wrapper justify-content-end">
+                                            <button type="submit" class="btn btn-primary mb-3 cancel-button"
+                                                data-bs-dismiss="modal" aria-label="Close">Cancel
+                                            </button>
+                                            <button type="button" class="btn btn-primary mb-3" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                                OK
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <?php require('assets/element/farmPopup.php')?>
                         </div>
-                        <?php require('assets/element/farmPopup.php')?>
                     </div>
+                    <?php require('assets/element/footer.html')?>
                 </div>
-                <?php require('assets/element/footer.html')?>
             </div>
         </div>
-        <!--   Modal-wrapper thenme -->
-
     </section>
     <?php require('assets/element/alertPopup.html')?>
-    <!--- main sec End --->
-    <!--- Footer  end --->
     <script src="assets/js/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/bootstrap.js"></script>
     <script src="assets/js/main.js?token=<?php echo time(); ?>"></script>
-
+    <script src="assets/js/bootstrap.js"></script>
 </body>
-
 </html>
