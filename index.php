@@ -7,9 +7,7 @@ if (isset($_SESSION['email'])) {
 }
 
 include("header.php"); 
-
 ?>
-
 
 <body class="position-relative">
     <!--- main sec Start--->
@@ -40,7 +38,7 @@ include("header.php");
     </section>
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?time=<?php echo time(); ?> "></script>
 </body>
 
 </html>

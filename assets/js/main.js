@@ -1,105 +1,143 @@
-$(document).ready(function() {
-  $('#signinForm').submit(function(event) {
-    event.preventDefault();
-      $.ajax({
-        type: 'POST',
-        url: 'process.php?action=signin',
-        data: $(this).serialize(),
-        success: function(response) {
-          if (response.success) {
-            window.location.href = 'dashboard.php';
-          } else {
-            showError(response.message)
-          }
-        },
-        error: handleError
-      });
+$(document).on('click', '.addFarm', function(event) {
+  $('.modal.fade').addClass("show");
+  $('.modal .modal-content').html('<div class="loading-wrapper fade-out-hide">Loading....</div>');
+
+  $.ajax({
+      type: "GET",
+      url: "ajaxEvent.php?q=addFarm",
+      success: function(msg) {
+          $('.modal .modal-content').html(msg);
+      }
   });
 });
 
-$(document).ready(function() {
-  $('#addFarmForm').submit(function(event) {
-    event.preventDefault();
-    
-    var farmName = $.trim($('input[name="farmName"]').val());
-    var villageName = $.trim($('input[name="villageName"]').val());
-    var landArea = $.trim($('input[name="landArea"]').val());
-    var coordinates = $.trim($('input[name="coordinates"]').val());
-    var possessionType = $('select[name="possessionType"]').val();
-    var opportunityCost = $.trim($('input[name="opportunityCost"]').val());
-    var rentalCost = $.trim($('input[name="rentalCost"]').val());
+$(document).on('click', '.btn-close', function(event) {
+  $('.modal.fade').removeClass("show");
+});
 
-    if (possessionType == '0') {
+$(document).on('change', '#possesionValue', function(event) {
+  $("#opportunityValue, #rentalValue").addClass("d-none");
+
+  var selectedValue = $(this).val();
+
+  selectedValue = parseInt(selectedValue);
+  console.log(selectedValue);
+  // Show the corresponding div based on the selected value
+  if (selectedValue === 1) {
+      $("#opportunityValue").removeClass("d-none");
+  } else if (selectedValue === 2) {
+      $("#rentalValue").removeClass("d-none");
+  }
+});
+
+$(document).on('submit', '#addFarmForm', function(event) {
+  event.preventDefault();
+
+  var possessionType = $('select[name="possessionType"]').val();
+  var opportunityCost = $.trim($('input[name="opportunityCost"]').val());
+  var rentalCost = $.trim($('input[name="rentalCost"]').val());
+  var cordinates = $('input[name="coordinates"]').val();
+
+  if (possessionType == 0) {
       showError("Select the possession cost!");
       return;
-    }
-    
-    if (possessionType == '1') {
-        if (opportunityCost == '') {
-            showError("Enter opportunity cost!");
-            return;
-        }
-    }
+  }
 
-    if (possessionType == '2') {
-        if (rentalCost == '') {
-            showError("Enter rental cost!");
-            return;
-        }
-    }
-      var formData = $(this).serialize();
-      $.ajax({
-        type: 'POST',
-        url: 'process.php?action=addfarm',
-        data: formData,
-        dataType: 'json',
-        success: function(response) {
+  if (possessionType == 1) {
+      if (opportunityCost == '') {
+          showError("Enter opportunity cost!");
+          return;
+      }
+  }
+
+  if (possessionType == 2) {
+      if (rentalCost == '') {
+          showError("Enter rental cost!");
+          return;
+      }
+  }
+
+  if (cordinates == '') {
+      showError("Get Coordinates of your location");
+      return;
+  }
+
+  var formData = $(this).serialize();
+  $.ajax({
+      type: 'POST',
+      url: 'process.php?action=addfarm',
+      data: formData,
+      dataType: 'json',
+      success: function(response) {
           if (response.success) {
-            handleSuccess(response, 'addFarm.php');
+              handleSuccess(response, '?p=farm');
           } else {
-            showError(response.message)
+              showError(response.message);
           }
-        },
-        error: handleError
-      });
+      },
+      error: handleError
   });
 });
 
+$(document).on('click', '.deleteForm', function(event) {
+    var id=$(this).attr('data-id');
+    $('.modal.fade').addClass("show");
+  
+    $.ajax({
+        type: "GET",
+        url: "ajaxEvent.php?q=deleteFarm&id= "+id+" ",
+        success: function(msg) {
+            $('.modal .modal-content').html(msg);
+        }
+    });
+});
 
+$(document).ready(function() {
+  $('#signinForm').submit(function(event) {
+      event.preventDefault();
+      $.ajax({
+          type: 'POST',
+          url: 'process.php?action=signin',
+          data: $(this).serialize(),
+          success: function(response) {
+              if (response.success) {
+                  window.location.href = 'dashboard.php';
+              } else {
+                  showError(response.message);
+              }
+          },
+          error: handleError
+      });
+  });
+});
 
 $(document).ready(function() {
   $('#signupForm').submit(function(event) {
-    event.preventDefault();
+      event.preventDefault();
 
-    var name = $.trim($('input[name="name"]').val());
-    var email = $.trim($('input[name="email"]').val());
-    var password = $.trim($('input[name="password"]').val());
-    var confirmPassword = $.trim($('input[name="confirm_password"]').val());
+      var password = $.trim($('input[name="password"]').val());
+      var confirmPassword = $.trim($('input[name="confirm_password"]').val());
 
-    if (name === '' || email === '' || password === '') {
-      showError("All fields are required!");
-    } else if (!isValidEmail(email)) {
-      showError("Invalid email format!");
-    } else if (password !== confirmPassword) {
-      showError("Passwords do not match!");
-    } else {
-      var formData = $(this).serialize();
-      $.ajax({
-        type: 'POST',
-        url: 'process.php?action=signup',
-        data: formData,
-        dataType: 'json',
-        success: function(response) {
-          handleSuccess(response, 'index.php');
-        },
-        error: handleError
-      });
-    }
+      if (password !== confirmPassword) {
+          showError("Passwords do not match!");
+      } else {
+          var formData = $(this).serialize();
+          $.ajax({
+              type: 'POST',
+              url: 'process.php?action=signup',
+              data: formData,
+              dataType: 'json',
+              success: function(response) {
+                  handleSuccess(response, 'index.php');
+              },
+              error: handleError
+          });
+      }
   });
 });
 
 $(document).ready(function() {
-  $('#confirmLogout').click(function(event) {
+  $('.logout').click(function(event) {
       $.ajax({
           type: 'POST',
           url: 'process.php?action=logout',
@@ -113,6 +151,8 @@ $(document).ready(function() {
       });
   });
 });
+
+
 
 let rowCount = jQuery('.row-count').length;
 let zzzzzTTT = 2 + rowCount++;
@@ -213,23 +253,8 @@ jQuery(".sendButton").click(function () {
 jQuery(".sendButton .close").click(function () {
     jQuery(".alert.cpsave").hide('medium');
 });
-jQuery("#possesionValue").change(function () {
-    // Hide all divs initially
-    jQuery("#opportunityValue, #rentalValue").addClass("d-none");
 
-    // Get the selected value
-    var selectedValue = jQuery(this).val();
 
-    // Convert selectedValue to a number using parseInt
-    selectedValue = parseInt(selectedValue);
-
-    // Show the corresponding div based on the selected value
-    if (selectedValue === 1) {
-        jQuery("#opportunityValue").removeClass("d-none");
-    } else if (selectedValue === 2) {
-        jQuery("#rentalValue").removeClass("d-none");
-    }
-});
 
 var mapStyles = [
     [{
@@ -267,267 +292,6 @@ var mapStyles = [
     ]
 
 ];
-
-
-
-function initMap() {
-    var myLatLng = {
-        lat: 31.4277655,
-        lng: 73.0709271
-    };
-
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: myLatLng,
-        zoom: 5.5,
-        styles: [
-            {
-              "elementType": "geometry",
-              "stylers": [
-                {
-                  "color": "#242f3e"
-                }
-              ]
-            },
-            {
-              "elementType": "labels.text.fill",
-              "stylers": [
-                {
-                  "color": "#746855"
-                }
-              ]
-            },
-            {
-              "elementType": "labels.text.stroke",
-              "stylers": [
-                {
-                  "color": "#242f3e"
-                }
-              ]
-            },
-            {
-              "featureType": "administrative.locality",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                {
-                  "color": "#d59563"
-                }
-              ]
-            },
-            {
-              "featureType": "poi",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                {
-                  "color": "#d59563"
-                }
-              ]
-            },
-            {
-              "featureType": "poi.park",
-              "elementType": "geometry",
-              "stylers": [
-                {
-                  "color": "#263c3f"
-                }
-              ]
-            },
-            {
-              "featureType": "poi.park",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                {
-                  "color": "#6b9a76"
-                }
-              ]
-            },
-            {
-              "featureType": "road",
-              "elementType": "geometry",
-              "stylers": [
-                {
-                  "color": "#38414e"
-                }
-              ]
-            },
-            {
-              "featureType": "road",
-              "elementType": "geometry.stroke",
-              "stylers": [
-                {
-                  "color": "#212a37"
-                }
-              ]
-            },
-            {
-              "featureType": "road",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                {
-                  "color": "#9ca5b3"
-                }
-              ]
-            },
-            {
-              "featureType": "road.highway",
-              "elementType": "geometry",
-              "stylers": [
-                {
-                  "color": "#746855"
-                }
-              ]
-            },
-            {
-              "featureType": "road.highway",
-              "elementType": "geometry.stroke",
-              "stylers": [
-                {
-                  "color": "#1f2835"
-                }
-              ]
-            },
-            {
-              "featureType": "road.highway",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                {
-                  "color": "#f3d19c"
-                }
-              ]
-            },
-            {
-              "featureType": "transit",
-              "elementType": "geometry",
-              "stylers": [
-                {
-                  "color": "#2f3948"
-                }
-              ]
-            },
-            {
-              "featureType": "transit.station",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                {
-                  "color": "#d59563"
-                }
-              ]
-            },
-            {
-              "featureType": "water",
-              "elementType": "geometry",
-              "stylers": [
-                {
-                  "color": "#17263c"
-                }
-              ]
-            },
-            {
-              "featureType": "water",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                {
-                  "color": "#515c6d"
-                }
-              ]
-            },
-            {
-              "featureType": "water",
-              "elementType": "labels.text.stroke",
-              "stylers": [
-                {
-                  "color": "#17263c"
-                }
-              ]
-            }
-          ],
-        mapTypeControl: false,
-        streetViewControl: false,
-        zoomControl: false,
-        fullscreenControl: false,
-        gestureHandling: 'none',
-
-    });
-
-    var marker = new google.maps.Marker({
-    position: myLatLng,
-    map: map,
-    // icon: {
-    //     url: 'path/to/your/custom-icon.png', // replace with the path to your custom icon
-    //     scaledSize: new google.maps.Size(40, 40), // adjust the size as needed
-    // },
-    label: {
-        text: '1', // label text
-        color: 'white', // label text color
-        fontWeight: 'bold', // label text weight
-    },
-});
-
-    
-    var infowindow = new google.maps.InfoWindow({
-        content: 'Your Marker Information', 
-    });
-
-    marker.addListener('click', function() {
-        infowindow.open(map, marker);
-    });
-
-  //   // First Marker
-  //   var marker1 = new google.maps.Marker({
-  //     position: { lat: 31.4277655, lng: 73.0709271 },
-  //     map: map,
-  //     label: {
-  //         text: '1',
-  //         color: 'white',
-  //         fontWeight: 'bold',
-  //     },
-  // });
-
-  // var infowindow1 = new google.maps.InfoWindow({
-  //     content: 'Marker 1 Information',
-  // });
-
-  // marker1.addListener('click', function() {
-  //     infowindow1.open(map, marker1);
-  // });
-
-  // Second Marker
-  var marker2 = new google.maps.Marker({
-      position: { lat: 30.2275574, lng: 72.7197111 },
-      map: map,
-      label: {
-          text: '2',
-          color: 'white',
-          fontWeight: 'bold',
-      },
-  });
-
-  var infowindow2 = new google.maps.InfoWindow({
-      content: 'Marker 2 Information',
-  });
-
-  marker2.addListener('click', function() {
-      infowindow2.open(map, marker2);
-  });
-
-  // Second Marker
-  var marker2 = new google.maps.Marker({
-    position: { lat: 30.8510591, lng: 73.5304344 },
-    map: map,
-    label: {
-        text: '3',
-        color: 'white',
-        fontWeight: 'bold',
-    },
-});
-
-var infowindow2 = new google.maps.InfoWindow({
-    content: 'Marker 3 Information',
-});
-
-marker2.addListener('click', function() {
-    infowindow2.open(map, marker2);
-});
-}
 
 //functions
 function isValidEmail(email) {

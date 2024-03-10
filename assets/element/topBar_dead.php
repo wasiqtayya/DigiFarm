@@ -24,18 +24,18 @@
                 <img src="assets/img/author-nav.png">
             </div>
             <?php
-                    $email = $_SESSION['email'];
-                        $log_in = "SELECT name FROM user WHERE email='$email'";
-                        $log_in_rs = mysqli_query($conn, $log_in);
+            $email = $_SESSION['email'];
+            $log_in = "SELECT name FROM user WHERE email='$email'";
+            $log_in_rs = mysqli_query($conn, $log_in);
 
-                        if($log_in_rs) {
-                            $row = mysqli_fetch_assoc($log_in_rs);
-                            $name = $row['name'];
+            if($log_in_rs) {
+                $row = mysqli_fetch_assoc($log_in_rs);
+            $name = $row['name'];
                             ?>
-                                                <span><?php echo $name; ?></span>
-                                                <?php
+            <span><?php echo $name; ?></span>
+            <?php
                         } else {
-                            echo "Error: " . mysqli_error($conn);
+                echo "Error: " . mysqli_error($conn);
                         }
             ?>
         </div>

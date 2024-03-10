@@ -39,7 +39,7 @@
             </div>
         </form>
         <p class="discription mobile">
-            Don't have an account? <a href="registerPage.php">Create now</a>
+            Don't have an account? <a href="index.php?p=register">Create now</a>
         </p>
     </div>
 </div>

@@ -563,6 +563,11 @@ ul {
 }
 
 /*Add Land Modal*/
+
+.modal
+{
+    background: #0000006e;
+}
 .main-content .modal-dialog {
     max-width: 620px;
 }
@@ -974,7 +979,7 @@ input[type="checkbox"] {
 .eye-showpasword {
     position: absolute;
     right: 4px;
-    bottom: 7px;
+    bottom: 5px;
     font-size: 20px;
     color: #2B4329;
     cursor: pointer;
@@ -2586,7 +2591,7 @@ input[type="checkbox"] {
     }
 
     .eye-showpasword {
-        display: none;
+        height: 34px;
     }
 
     .liginform-wraper .wrapper-container {
