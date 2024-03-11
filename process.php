@@ -16,8 +16,18 @@ if(isset($_GET['action'])) {
     }
 
     if ($_GET['action'] == 'addfarm') {
-        echo json_encode(addfarm());
+        echo json_encode(addFarm());
     }
+
+    if ($_GET['action'] == 'deleteform') {
+        echo json_encode(deleteForm());
+    }
+
+    if ($_GET['action'] == 'updatefarm') {
+        echo json_encode(updateFarm());
+    }
+
+    
 
     
 }
@@ -157,6 +167,67 @@ function addFarm()
         return array('success' => false, 'message' => 'An error occurred: ' . $e->getMessage());
     }
 }
+function deleteForm()
+{
+    require_once("config.php");
+    try {
+        $id = $_POST['id']; 
+
+        $update_query = "UPDATE farm SET enabled = '1' WHERE id='$id'";
+        $update_result = mysqli_query($conn, $update_query);
+
+        if($update_result) {
+            return array('success' => true, 'message' => 'Farm deleted successfully!');
+        } else {
+            return array('success' => false, 'message' => 'Failed to delete record!');
+        }
+    } catch (Exception $e) {
+        return array('success' => false, 'message' => 'An error occurred: ' . $e->getMessage());
+    }
+}
+
+function updateFarm()
+{
+    require_once("config.php");
+
+    try {
+        $farmId = $_POST['id']; 
+        $farmName = $_POST["farmName"];
+        $villageName = $_POST["villageName"];
+        $landArea = $_POST["landArea"];
+        $possessionType = $_POST["possessionType"];
+        $coordinates = $_POST["coordinates"];
+        $opportunityCost = isset($_POST["opportunityCost"]) ? $_POST["opportunityCost"] : null;
+        $rentalCost = isset($_POST["rentalCost"]) ? $_POST["rentalCost"] : null;
+        list($latitude, $longitude) = explode(',', $coordinates);
+
+        $date = date('Y-m-d H:i:s');
+
+        $update_query = "UPDATE farm SET farm_name='$farmName', village_no='$villageName', farm_area=$landArea, possession_type_id=$possessionType, latitude='$latitude', longitude='$longitude' WHERE id=$farmId";
+        $update_result = mysqli_query($conn, $update_query);
+    
+        if($update_result) {
+
+            if ($possessionType == '1') {
+                $insert_cost_query = "UPDATE possession_cost SET possession_cost = '$opportunityCost',created_at='$date' WHERE id=$farmId";
+            } elseif ($possessionType == '2') {
+                $insert_cost_query = "UPDATE possession_cost SET possession_cost = '$rentalCost',created_at='$date' WHERE id=$farmId";
+
+            }
+
+            if(mysqli_query($conn, $insert_cost_query)) {
+                return array('success' => true, 'message' => 'Farm updated successfully!');
+            } else {
+                return array('success' => false, 'message' => 'Failed to update farm!');
+            }
+        } else {
+            return array('success' => false, 'message' => 'Failed to update farm!');
+        }
+    } catch (Exception $e) {
+        return array('success' => false, 'message' => 'An error occurred: ' . $e->getMessage());
+    }
+}
+
 ?>
 
 

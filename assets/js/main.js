@@ -11,24 +11,44 @@ $(document).on('click', '.addFarm', function(event) {
   });
 });
 
-$(document).on('click', '.btn-close', function(event) {
-  $('.modal.fade').removeClass("show");
-});
+$(document).on('click', '.btn-close, .cancel-button', function(event) {
+    $('.modal.fade').removeClass("show");
+  });
 
-$(document).on('change', '#possesionValue', function(event) {
-  $("#opportunityValue, #rentalValue").addClass("d-none");
-
+$(document).on('change', '#possesionEditValue', function(event) {
   var selectedValue = $(this).val();
 
   selectedValue = parseInt(selectedValue);
-  console.log(selectedValue);
-  // Show the corresponding div based on the selected value
+
+  if (selectedValue === 0) {
+    console.log(selectedValue);
+    $("#opportunityValue, #rentalValue").addClass("d-none");
+  }else
   if (selectedValue === 1) {
+    console.log(selectedValue);
       $("#opportunityValue").removeClass("d-none");
+      $("#rentalValue").addClass("d-none");
   } else if (selectedValue === 2) {
+    console.log(selectedValue);
+    $("#opportunityValue").addClass("d-none");
       $("#rentalValue").removeClass("d-none");
   }
 });
+
+$(document).on('change', '#possesionValue', function(event) {
+    $("#opportunityValue, #rentalValue").addClass("d-none");
+  
+    var selectedValue = $(this).val();
+  
+    selectedValue = parseInt(selectedValue);
+    console.log(selectedValue);
+    // Show the corresponding div based on the selected value
+    if (selectedValue === 1) {
+        $("#opportunityValue").removeClass("d-none");
+    } else if (selectedValue === 2) {
+        $("#rentalValue").removeClass("d-none");
+    }
+  });
 
 $(document).on('submit', '#addFarmForm', function(event) {
   event.preventDefault();
@@ -91,6 +111,89 @@ $(document).on('click', '.deleteForm', function(event) {
         }
     });
 });
+
+$(document).on('click', '.editForm', function(event) {
+    var id=$(this).attr('data-id');
+    $('.modal.fade').addClass("show");
+  
+    $.ajax({
+        type: "GET",
+        url: "ajaxEvent.php?q=editForm&id= "+id+" ",
+        success: function(msg) {
+            $('.modal .modal-content').html(msg);
+        }
+    });
+});
+
+$(document).on('submit', '#updateFarmForm', function(event) {
+    event.preventDefault();
+    var id=$(this).attr('data-id');
+    var possessionType = $('select[name="possessionType"]').val();
+    var opportunityCost = $.trim($('input[name="opportunityCost"]').val());
+    var rentalCost = $.trim($('input[name="rentalCost"]').val());
+
+    if (possessionType == 0) {
+        showError("Select the possession cost!");
+        return;
+    }
+
+    if (possessionType == 1) {
+        if (opportunityCost == '') {
+            showError("Enter opportunity cost!");
+            return;
+        }
+    }
+
+    if (possessionType == 2) {
+        if (rentalCost == '') {
+            showError("Enter rental cost!");
+            return;
+        }
+    }
+    var formData = $(this).serialize();
+    $.ajax({
+        type: 'POST',
+        url: 'process.php?action=updatefarm',
+        data: {
+            id: id
+        },
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                handleSuccess(response, '?p=farm');
+            } else {
+                showError(response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            handleError(xhr, status, error);
+        }
+    });
+});
+
+$(document).on('click', '.deleteButton', function(event) {
+    var id = $(this).data('id');
+    $.ajax({
+        type: 'POST',
+        url: 'process.php?action=deleteform',
+        data: {
+            id: id
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                handleSuccess(response, '?p=farm');
+            } else {
+                showError(response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            handleError(xhr, status, error);
+        }
+    });
+});
+
 
 $(document).ready(function() {
   $('#signinForm').submit(function(event) {
