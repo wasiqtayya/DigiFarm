@@ -6,5 +6,5 @@ Domain: https://digifarm.live/
 
 # Members:
 
-Wasiq Tayyab (2020-ag-6404)
-Absham Ali (2020-ag-6443)
+1. Wasiq Tayyab
+2. Absham Ali
